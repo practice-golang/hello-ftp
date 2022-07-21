@@ -21,7 +21,6 @@ type QueSheet struct {
 var que []QueSheet
 
 var (
-	// srcBase = "hihi/haha/samples"
 	srcBase = ""
 	dstBase = ""
 
