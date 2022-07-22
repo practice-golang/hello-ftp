@@ -1,9 +1,9 @@
 package main // import "hello-ftp"
 
 import (
-	"hello-ftp/ftp"
 	"hello-ftp/model"
-	"hello-ftp/sftp"
+	"hello-ftp/uploader/ftp"
+	"hello-ftp/uploader/sftp"
 )
 
 func main() {
