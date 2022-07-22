@@ -1,8 +1,6 @@
-package model
+package config
 
 type QueSheet struct {
 	Name  string
 	IsDIR bool
 }
-
-var Que []QueSheet

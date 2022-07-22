@@ -2,7 +2,7 @@ package sftp
 
 import (
 	"fmt"
-	"hello-ftp/model"
+	"hello-ftp/uploader/config"
 	"io"
 	"log"
 	"os"
@@ -50,7 +50,7 @@ func UploadFile(sc *sftp.Client, localFile, remoteFile string) (err error) {
 	return nil
 }
 
-func ProcMain(host model.Host) {
+func ProcMain(host config.Host) {
 	var sshConfig = &ssh.ClientConfig{
 		User:            host.Username,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
@@ -70,18 +70,18 @@ func ProcMain(host model.Host) {
 	}
 	defer sc.Close()
 
-	srcBase := model.ReplacerSlash.Replace(host.SrcBase)
+	srcBase := config.ReplacerSlash.Replace(host.SrcBase)
 	srcRoot := filepath.Base(srcBase)
-	srcCutPath := model.ReplacerSlash.Replace(strings.TrimSuffix(srcBase, srcRoot))
+	srcCutPath := config.ReplacerSlash.Replace(strings.TrimSuffix(srcBase, srcRoot))
 
-	ques := []model.QueSheet{}
+	ques := []config.QueSheet{}
 
 	// err = filepath.Walk(srcBase, util.WalkDIR)
 	err = filepath.Walk(srcBase, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		ques = append(ques, model.QueSheet{Name: path, IsDIR: info.IsDir()})
+		ques = append(ques, config.QueSheet{Name: path, IsDIR: info.IsDir()})
 		return nil
 	})
 	if err != nil {

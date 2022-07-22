@@ -2,7 +2,7 @@ package ftp
 
 import (
 	"fmt"
-	"hello-ftp/model"
+	"hello-ftp/uploader/config"
 	"log"
 	"os"
 	"path/filepath"
@@ -40,32 +40,32 @@ func UploadFile(fc *goftp.Client, localFile, remoteFile string) (err error) {
 	return nil
 }
 
-func ProcMain(host model.Host) {
-	config := goftp.Config{
+func ProcMain(host config.Host) {
+	ftpConfig := goftp.Config{
 		User:            host.Username,
 		Password:        host.Password,
 		ActiveTransfers: true,
 	}
 
-	fc, err := goftp.DialConfig(config, host.Hostname+":"+host.Port)
+	fc, err := goftp.DialConfig(ftpConfig, host.Hostname+":"+host.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer fc.Close()
 	// log.Println("Connected.")
 
-	srcBase := model.ReplacerSlash.Replace(host.SrcBase)
+	srcBase := config.ReplacerSlash.Replace(host.SrcBase)
 	srcRoot := filepath.Base(srcBase)
-	srcCutPath := model.ReplacerSlash.Replace(strings.TrimSuffix(srcBase, srcRoot))
+	srcCutPath := config.ReplacerSlash.Replace(strings.TrimSuffix(srcBase, srcRoot))
 
-	ques := []model.QueSheet{}
+	ques := []config.QueSheet{}
 
 	// err = filepath.Walk(srcBase, util.WalkDIR)
 	err = filepath.Walk(srcBase, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		ques = append(ques, model.QueSheet{Name: path, IsDIR: info.IsDir()})
+		ques = append(ques, config.QueSheet{Name: path, IsDIR: info.IsDir()})
 		return nil
 	})
 	if err != nil {
